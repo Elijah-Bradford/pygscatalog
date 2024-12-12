@@ -119,6 +119,12 @@ def match_variants(
             score_keys = ["chr_name", "chr_position", "effect_allele_FLIP"]
             target_keys = ["#CHROM", "POS", "ALT"]
             effect_allele_column = "effect_allele_FLIP"
+        case "homref":
+            score_keys = ["chr_name", "chr_position", "effect_allele"]
+            target_keys = ["#CHROM", "POS", "REF"]
+            effect_allele_column = "effect_allele"
+            # Add a condition to handle ALT as "." and GT as "0/0"
+            target = target.filter((pl.col("ALT") == ".") & (pl.col("GT") == "0/0"))
         case _:
             logger.critical(f"Invalid match strategy: {match_type}")
             raise Exception
